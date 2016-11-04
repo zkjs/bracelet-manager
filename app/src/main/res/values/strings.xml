@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">病人监视端</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+
+    <string name="loading_please_waiting">请求数据中，请稍等...</string>
+    <string name="no_data">暂无数据</string>
+</resources>
