@@ -21,8 +21,16 @@ public class EndpointHelper {
      * 手环轨迹
      * @return
      */
-    public static String trackTrack(String bracelet){
+    public static String braceletTrack(String bracelet){
         return  ConfigUtil.getInstance().getApiDomain()+"track/" + bracelet;
+    }
+
+    /**
+     * 手环轨迹(相对指标)
+     * @return
+     */
+    public static String braceletTrackCoords(String bracelet){
+        return  ConfigUtil.getInstance().getApiDomain()+"track/rel/" + bracelet;
     }
 
     /**

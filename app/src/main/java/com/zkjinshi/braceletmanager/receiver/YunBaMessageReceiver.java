@@ -5,13 +5,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+import com.android.volley.Cache;
 import com.google.gson.Gson;
+import com.zkjinshi.braceletmanager.common.utils.CacheUtil;
 import com.zkjinshi.braceletmanager.common.utils.NotificationHelper;
 import com.zkjinshi.braceletmanager.models.SOSMessage;
 
 import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.Date;
 
 import io.yunba.android.manager.YunBaManager;
 
@@ -44,8 +48,11 @@ public class YunBaMessageReceiver extends BroadcastReceiver {
                 SOSMessage sosMessage = new Gson().fromJson(msg, SOSMessage.class);
 
                 if(null != sosMessage) {
-                    NotificationHelper.getInstance().showNotification(context, sosMessage);
-                    EventBus.getDefault().post(sosMessage);
+                    if (new Date().getTime() - CacheUtil.getInstance().getBraceletTime(sosMessage.getBracelet()) > 5000) {
+                        NotificationHelper.getInstance().showNotification(context, sosMessage);
+                        EventBus.getDefault().post(sosMessage);
+                        CacheUtil.getInstance().setBraceletTime(sosMessage.getBracelet(), new Date().getTime());
+                    }
                 }
 
 //            } catch (JSONException e) {

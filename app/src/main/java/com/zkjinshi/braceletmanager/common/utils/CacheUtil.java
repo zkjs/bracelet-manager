@@ -64,32 +64,6 @@ public class CacheUtil {
     }
 
     /**
-     * 设置指引状态
-     * @param isGuide
-     */
-    public void setGuide(boolean isGuide) {
-        if (null == context) {
-            return;
-        }
-        SharedPreferences sp = context.getSharedPreferences(
-                PARKING_CACHE, Context.MODE_PRIVATE);
-        sp.edit().putBoolean("is_guide", isGuide).commit();
-    }
-
-    /**
-     * 获取指引状态
-     * @return
-     */
-    public boolean isGuide() {
-        if (null == context) {
-            return false;
-        }
-        SharedPreferences sp = context.getSharedPreferences(
-                PARKING_CACHE, Context.MODE_PRIVATE);
-        return sp.getBoolean("is_guide", false);
-    }
-
-    /**
      * 保存登录token
      * @param token
      */
@@ -141,127 +115,33 @@ public class CacheUtil {
         return sp.getString("userId", null);
     }
 
+
     /**
-     * 设置权限控制列表
-     * @param features
+     * 保存bracelet通知时间
+     * @param
      */
-    public void setFeatures(Set<String> features) {
+    public void setBraceletTime(String bracelet, long timestamp) {
         if (null == context) {
             return;
         }
         SharedPreferences sp = context.getSharedPreferences(
                 PARKING_CACHE, Context.MODE_PRIVATE);
-        sp.edit().putStringSet("features",features).commit();
+        sp.edit().putLong(bracelet, timestamp).commit();
     }
 
+
+
     /**
-     * 获取用户id
+     * 获取Bracelet通知时间
      * @return
      */
-    public Set<String> getFeatures() {
-        if (null == context) {
-            return null;
-        }
-        SharedPreferences sp = context.getSharedPreferences(
-                PARKING_CACHE, Context.MODE_PRIVATE);
-        return sp.getStringSet("features", null);
-    }
-
-
-    /**
-     * 保存用户姓名
-     * @param userName
-     */
-    public void setUserName(String userName) {
-        if (null == context) {
-            return;
-        }
-        SharedPreferences sp = context.getSharedPreferences(
-                PARKING_CACHE, Context.MODE_PRIVATE);
-        sp.edit().putString("userName", userName).commit();
-    }
-
-
-
-    /**
-     * 获取用户姓名
-     * @return
-     */
-    public String getUserName() {
-        if (null == context) {
-            return null;
-        }
-        SharedPreferences sp = context.getSharedPreferences(
-                PARKING_CACHE, Context.MODE_PRIVATE);
-        return sp.getString("userName","");
-    }
-
-    /**
-     * 保存用户姓别
-     * @param sex
-     */
-    public void setSex(String sex) {
-        if (null == context) {
-            return;
-        }
-        SharedPreferences sp = context.getSharedPreferences(
-                PARKING_CACHE, Context.MODE_PRIVATE);
-        sp.edit().putString("sex", sex).commit();
-    }
-
-    /**
-     * 获取用户姓别
-     * @return
-     */
-    public String getSex() {
-        if (null == context) {
-            return null;
-        }
-        SharedPreferences sp = context.getSharedPreferences(
-                PARKING_CACHE, Context.MODE_PRIVATE);
-        return sp.getString("sex","0");
-    }
-
-    /**
-     * 保存用户手机号
-     * @param mobilePhone
-     */
-    public void setUserPhone(String mobilePhone) {
-        if (null == context) {
-            return;
-        }
-        SharedPreferences sp = context.getSharedPreferences(
-                PARKING_CACHE, Context.MODE_PRIVATE);
-        sp.edit().putString("mobilePhone", mobilePhone).commit();
-    }
-
-    /**
-     * 获取用户手机号
-     * @return
-     */
-    public String getUserPhone() {
-        if (null == context) {
-            return null;
-        }
-        SharedPreferences sp = context.getSharedPreferences(
-                PARKING_CACHE, Context.MODE_PRIVATE);
-        return sp.getString("mobilePhone","");
-    }
-
-    public void setCurrentItem(int currentItem) {
-        if (null == context) {
-            return;
-        }
-        SharedPreferences sp = context.getSharedPreferences(PARKING_CACHE, Context.MODE_PRIVATE);
-        sp.edit().putInt("currentItem", currentItem).commit();
-    }
-
-    public int getCurrentItem() {
+    public long getBraceletTime(String bracelet) {
         if (null == context) {
             return 0;
         }
-        SharedPreferences sp = context.getSharedPreferences(PARKING_CACHE, Context.MODE_PRIVATE);
-        return sp.getInt("currentItem", 0);
+        SharedPreferences sp = context.getSharedPreferences(
+                PARKING_CACHE, Context.MODE_PRIVATE);
+        return sp.getLong(bracelet,0);
     }
 
 

@@ -1,5 +1,6 @@
 package com.zkjinshi.braceletmanager.Pages;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -8,8 +9,6 @@ import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.amap.api.maps2d.AMap;
@@ -44,7 +43,8 @@ import okhttp3.Response;
  * Copyright (C) 2016 qinyejun
  */
 
-public class PatientTrackActivity extends AppCompatActivity implements AMap.InfoWindowAdapter {
+public class PatientTrackActivity extends AppCompatActivity implements AMap.InfoWindowAdapter,
+        AMap.OnInfoWindowClickListener {
 
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
@@ -79,6 +79,7 @@ public class PatientTrackActivity extends AppCompatActivity implements AMap.Info
         mapView.onCreate(savedInstanceState);
         aMap = mapView.getMap();
         aMap.setInfoWindowAdapter(this);
+        aMap.setOnInfoWindowClickListener(this);
 
         loadData();
     }
@@ -121,7 +122,7 @@ public class PatientTrackActivity extends AppCompatActivity implements AMap.Info
         if (getIntent().getSerializableExtra("sos") != null) {
             sos = (SOSMessage) getIntent().getSerializableExtra("sos");
             bracelet = sos.getBracelet();
-            mTvName.setText(sos.getAlert());
+            mTvName.setText(sos.getMessage());
             mTvAddress.setText(sos.getAddress());
         }
     }
@@ -130,7 +131,7 @@ public class PatientTrackActivity extends AppCompatActivity implements AMap.Info
         if (bracelet == null || TextUtils.isEmpty(bracelet)) {
             return;
         }
-        String url = EndpointHelper.trackTrack(bracelet);
+        String url = EndpointHelper.braceletTrack(bracelet);
         OkHttpHelper.getInstance().get(url, new HttpLoadingCallback<NormalResponse<NormalListData<TrackPointVo>>>(this){
 
             @Override
@@ -162,7 +163,7 @@ public class PatientTrackActivity extends AppCompatActivity implements AMap.Info
         MarkerOptions markerOption = new MarkerOptions().anchor(0.5f, 0.5f)
                 .position(latLngs.get(latLngs.size()-1));
         if (sos != null) {
-            markerOption.title(sos.getAlert());
+            markerOption.title(sos.getMessage());
             markerOption.snippet(sos.getAddress());
         } else if ( patient != null ) {
             markerOption.title(patient.getPatientName());
@@ -222,4 +223,15 @@ public class PatientTrackActivity extends AppCompatActivity implements AMap.Info
         }
     }
 
+    @Override
+    public void onInfoWindowClick(Marker marker) {
+        Intent intent = new Intent(this, TrackDrawActivity.class);
+        if (patient != null) {
+            intent.putExtra("patient", patient);
+        }
+        if (sos != null) {
+            intent.putExtra("sos", sos);
+        }
+        startActivity(intent);
+    }
 }

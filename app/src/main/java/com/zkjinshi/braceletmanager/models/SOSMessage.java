@@ -12,7 +12,7 @@ public class SOSMessage implements Serializable {
     private String apid;
     private String payload;
     private int rssi;
-    private String alert;
+    private String message;
     private String address;
     private String bracelet;
 
@@ -40,12 +40,12 @@ public class SOSMessage implements Serializable {
         this.rssi = rssi;
     }
 
-    public String getAlert() {
-        return alert;
+    public String getMessage() {
+        return message;
     }
 
-    public void setAlert(String alert) {
-        this.alert = alert;
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     public String getAddress() {

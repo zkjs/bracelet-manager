@@ -70,6 +70,11 @@
                   android:theme="@style/AppTheme.NoActionBar"
                   android:screenOrientation="portrait"/>
 
+        <activity android:name=".Pages.TrackDrawActivity"
+                  android:label="病人轨迹"
+                  android:theme="@style/AppTheme.NoActionBar"
+                  android:screenOrientation="portrait"/>
+
         <!-- 云巴配置 -->
         <meta-data android:name="YUNBA_APPKEY" android:value="581aff4bbf76bbd65330b1d3" />
         <service android:name="io.yunba.android.core.YunBaService"> </service>

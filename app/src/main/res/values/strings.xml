@@ -8,4 +8,6 @@
 
     <string name="loading_please_waiting">请求数据中，请稍等...</string>
     <string name="no_data">暂无数据</string>
+
+    <string name="answer_sos">应答</string>
 </resources>

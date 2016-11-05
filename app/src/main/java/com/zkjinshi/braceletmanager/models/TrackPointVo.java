@@ -11,6 +11,7 @@ public class TrackPointVo implements Serializable {
     private String ap;
     private int floor;
     private Gps gps;
+    private double radius;
     private long timestamp;
 
     public String getAp() {
@@ -43,5 +44,13 @@ public class TrackPointVo implements Serializable {
 
     public void setTimestamp(long timestamp) {
         this.timestamp = timestamp;
+    }
+
+    public double getRadius() {
+        return radius;
+    }
+
+    public void setRadius(double radius) {
+        this.radius = radius;
     }
 }

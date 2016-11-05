@@ -41,7 +41,7 @@ public class NotificationHelper {
     public void showNotification(Context context, SOSMessage msg){
         // 1.设置显示信息
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(context);
-        notificationBuilder.setContentTitle(msg.getAlert());
+        notificationBuilder.setContentTitle(msg.getMessage());
         notificationBuilder.setContentText(msg.getAddress());
         notificationBuilder.setSmallIcon(R.mipmap.ic_launcher);
 

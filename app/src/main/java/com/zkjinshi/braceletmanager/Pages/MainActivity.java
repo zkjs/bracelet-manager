@@ -159,9 +159,9 @@ public class MainActivity extends AppCompatActivity
 
     private void showMsgAlert(final SOSMessage msg) {
         new AlertDialog.Builder(this)
-                .setTitle(msg.getAlert())
+                .setTitle(msg.getMessage())
                 .setMessage(msg.getAddress())
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.answer_sos, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         answerSOS(msg);
                     }
