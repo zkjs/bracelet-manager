@@ -3,6 +3,7 @@ package com.zkjinshi.braceletmanager.Pages;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Point;
@@ -29,6 +30,8 @@ import com.zkjinshi.braceletmanager.models.TrackPointVo;
 import com.zkjinshi.braceletmanager.response.NormalResponse;
 import com.zkjinshi.braceletmanager.response.data.TrackListData;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
@@ -142,8 +145,8 @@ public class TrackDrawActivity extends AppCompatActivity {
         final int lineColor = Color.GRAY;
         final int lineWidth = 6;
         final int apColor = Color.BLUE;
-        final int startColor = Color.RED;
-        final int endColor = Color.GREEN;
+        final int startColor = Color.CYAN;
+        final int endColor = Color.RED;
 
         int screenWidth;
         int screenHeight;
@@ -166,13 +169,27 @@ public class TrackDrawActivity extends AppCompatActivity {
 
             // 创建画笔
             Paint p = new Paint();
-            p.setColor(lineColor);
-            p.setStrokeWidth(lineWidth);
-            p.setAntiAlias(true);
-            p.setStyle(Paint.Style.STROKE);
+
+            if (null != aps && aps.size() > 0) {
+                // 画AP
+                p.setColor(apColor);
+                p.setTextSize(textSize);
+                for (AccessPointVo ap : aps) {
+                    Gps point = convertCoords(ap.getGps());
+                    canvas.drawCircle((int) point.getLng(), (int) point.getLat(), 8, p);
+                    canvas.drawText(ap.getAddress(), (int) point.getLng()+8, (int) point.getLat()-12, p);
+                }
+            }
 
             if (null != track && track.size() > 1) {
                 // 画轨迹
+                p.reset();
+                p.setColor(lineColor);
+                p.setStrokeWidth(lineWidth);
+                p.setAntiAlias(true);
+                p.setStyle(Paint.Style.STROKE);
+                p.setPathEffect(new DashPathEffect(new float[]{6, 4}, 0));
+
                 Path path = new Path();
                 Gps firstP = convertCoords(track.get(0).getGps());
                 path.moveTo((int) firstP.getLng(), (int) firstP.getLat());
@@ -184,27 +201,28 @@ public class TrackDrawActivity extends AppCompatActivity {
                 //path.close();
                 canvas.drawPath(path, p);
 
+                p.reset();
+                p.setColor(lineColor);
+                p.setStrokeWidth(2);
+                p.setAntiAlias(true);
+                p.setStyle(Paint.Style.STROKE);
+                for (int i = 1; i < track.size(); i++) {
+                    Gps point = convertCoords(track.get(i).getGps());
+                    canvas.drawCircle((int) point.getLng(), (int) point.getLat(), 8, p);
+                }
+
                 // 画起始点
                 p.reset();
                 p.setColor(startColor);
                 p.setTextSize(textSize);
                 Gps start = convertCoords(track.get(0).getGps());
                 Gps end = convertCoords(track.get(track.size() - 1).getGps());
-                canvas.drawCircle((int) start.getLng(), (int) start.getLat(), 8, p);
+                canvas.drawCircle((int) start.getLng(), (int) start.getLat(), 10, p);
                 p.setColor(endColor);
                 canvas.drawCircle((int) end.getLng(), (int) end.getLat(), 8, p);
-            }
+                //终点时间
+                canvas.drawText(formatTime(track.get(track.size() - 1).getTimestamp()), (int) end.getLng()+6, (int) end.getLat()-6, p);
 
-            if (null != aps && aps.size() > 0) {
-                // 画AP
-                p.reset();
-                p.setColor(apColor);
-                p.setTextSize(textSize);
-                for (AccessPointVo ap : aps) {
-                    Gps point = convertCoords(ap.getGps());
-                    canvas.drawCircle((int) point.getLng(), (int) point.getLat(), 8, p);
-                    canvas.drawText(ap.getAddress(), (int) point.getLng()+8, (int) point.getLat()-12, p);
-                }
             }
 
         }
@@ -214,6 +232,12 @@ public class TrackDrawActivity extends AppCompatActivity {
             int minSize = Math.min(screenHeight, screenWidth) - padding*2;
             double s = minSize/measure;
             return new Gps(gps.getLat()*s + padding*2, gps.getLng()*s + padding);
+        }
+
+        private String formatTime(long timestamp) {
+            Date date = new Date();
+            date.setTime(timestamp);
+            return new SimpleDateFormat("HH:mm:ss").format(date);
         }
     }
 }
