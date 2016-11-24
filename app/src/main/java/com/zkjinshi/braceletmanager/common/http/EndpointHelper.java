@@ -73,4 +73,20 @@ public class EndpointHelper {
         return  ConfigUtil.getInstance().getApiDomain()+"track/" + bracelet;
     }
 
+    /**
+     * 建筑物地图
+     * @return
+     */
+    public static String buildingMap() {
+        return  ConfigUtil.getInstance().getApiDomain()+"map";
+    }
+
+    /**
+     * 楼层地图
+     * @return
+     */
+    public static String floorMap(String buildingID) {
+        return  ConfigUtil.getInstance().getApiDomain()+"map/" + buildingID;
+    }
+
 }

@@ -81,7 +81,10 @@ public class PatientDetailActivity extends BaseActivity {
         mTvRoom.setText(patient.getPatientRoom() != null ? patient.getPatientRoom() + "房" : "");
     }
 
-
+    /**
+     * 解绑手环
+     * @param view
+     */
     @OnClick(R.id.btn_confirm)
     public void onClick(View view) {
         String url = EndpointHelper.unbindBracelet(patient.getBracelet());
@@ -105,6 +108,9 @@ public class PatientDetailActivity extends BaseActivity {
         });
     }
 
+    /**
+     * 查看病人轨迹
+     */
     @OnClick(R.id.btn_track)
     public void onClick() {
         Intent intent = new Intent(this, PatientTrackActivity.class);

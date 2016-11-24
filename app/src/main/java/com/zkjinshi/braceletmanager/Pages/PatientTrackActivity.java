@@ -18,6 +18,8 @@ import com.amap.api.maps2d.model.LatLng;
 import com.amap.api.maps2d.model.LatLngBounds;
 import com.amap.api.maps2d.model.Marker;
 import com.amap.api.maps2d.model.MarkerOptions;
+import com.amap.api.maps2d.model.Polygon;
+import com.amap.api.maps2d.model.PolygonOptions;
 import com.amap.api.maps2d.model.Polyline;
 import com.amap.api.maps2d.model.PolylineOptions;
 import com.zkjinshi.braceletmanager.R;
@@ -26,6 +28,10 @@ import com.zkjinshi.braceletmanager.common.http.EndpointHelper;
 import com.zkjinshi.braceletmanager.common.http.HttpLoadingCallback;
 import com.zkjinshi.braceletmanager.common.http.OkHttpHelper;
 import com.zkjinshi.braceletmanager.common.utils.DialogUtil;
+import com.zkjinshi.braceletmanager.models.BuildingVo;
+import com.zkjinshi.braceletmanager.models.DrawableType;
+import com.zkjinshi.braceletmanager.models.DrawableVo;
+import com.zkjinshi.braceletmanager.models.Gps;
 import com.zkjinshi.braceletmanager.models.PatientVo;
 import com.zkjinshi.braceletmanager.models.SOSMessage;
 import com.zkjinshi.braceletmanager.models.TrackPointVo;
@@ -33,6 +39,7 @@ import com.zkjinshi.braceletmanager.response.NormalResponse;
 import com.zkjinshi.braceletmanager.response.data.NormalListData;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import butterknife.BindView;
@@ -40,6 +47,7 @@ import butterknife.ButterKnife;
 import okhttp3.Response;
 
 /**
+ * 在高德地图上显示病人位置信息
  * Created by yejun on 11/4/16.
  * Copyright (C) 2016 qinyejun
  */
@@ -62,6 +70,7 @@ public class PatientTrackActivity extends BaseActivity implements AMap.InfoWindo
     private List<TrackPointVo> track;
     private SOSMessage sos;
     private PatientVo patient;
+    private List<BuildingVo> buildings;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -90,7 +99,8 @@ public class PatientTrackActivity extends BaseActivity implements AMap.InfoWindo
         aMap.setInfoWindowAdapter(this);
         aMap.setOnInfoWindowClickListener(this);
 
-        loadData();
+        loadTrackData();
+        loadBuildingData();
     }
 
     @Override
@@ -136,7 +146,10 @@ public class PatientTrackActivity extends BaseActivity implements AMap.InfoWindo
         }
     }
 
-    private void loadData() {
+    /**
+     * 加载病人轨迹数据
+     */
+    private void loadTrackData() {
         if (bracelet == null || TextUtils.isEmpty(bracelet)) {
             return;
         }
@@ -147,7 +160,7 @@ public class PatientTrackActivity extends BaseActivity implements AMap.InfoWindo
             public void onSuccess(Response response, NormalResponse<NormalListData<TrackPointVo>> result) {
                 if (result.getStatus().equals("ok")) {
                     track = result.getData().getList();
-                    updateMap();
+                    updateMapTrack();
                 } else {
                     DialogUtil.getInstance().showToast(PatientTrackActivity.this, result.getError());
                 }
@@ -155,7 +168,28 @@ public class PatientTrackActivity extends BaseActivity implements AMap.InfoWindo
         });
     }
 
-    private void updateMap() {
+    /**
+     * 加载建筑物绘制数据
+     */
+    private void loadBuildingData() {
+        String url = EndpointHelper.buildingMap();
+        OkHttpHelper.getInstance().get(url, new HttpLoadingCallback<NormalResponse<NormalListData<BuildingVo>>>(this) {
+            @Override
+            public void onSuccess(Response response, NormalResponse<NormalListData<BuildingVo>> result) {
+                if (result.getStatus().equals("ok")) {
+                    buildings = result.getData().getList();
+                    updateMapBuildings();
+                } else {
+                    DialogUtil.getInstance().showToast(PatientTrackActivity.this, result.getError());
+                }
+            }
+        });
+    }
+
+    /**
+     * 更新地图上病人轨迹
+     */
+    private void updateMapTrack() {
         if (track == null || track.size() == 0) {
             return;
         }
@@ -180,6 +214,60 @@ public class PatientTrackActivity extends BaseActivity implements AMap.InfoWindo
 
         aMap.addMarker(markerOption).showInfoWindow();
     }
+
+    /**
+     * 更新地图上医院建筑
+     */
+    private void updateMapBuildings() {
+        if (buildings == null || buildings.size() == 0) {
+            return;
+        }
+        for (BuildingVo b : buildings) {
+            drawBuilding(b);
+        }
+    }
+
+    /**
+     * 在地图上绘制建筑物图层
+     * @param building
+     */
+    private void drawBuilding(BuildingVo building) {
+        if (building.getDrawables().size() <= 0)  return;
+
+        for (DrawableVo d: building.getDrawables()) {
+            if (d.getType().equals(DrawableType.Polygon.toString())) {//多边形
+                drawPolygon(d);
+            }
+        }
+
+        MarkerOptions markerOption = new MarkerOptions().anchor(0.5f, 0.5f)
+                .position(new LatLng(building.getLat(), building.getLng()));
+
+        markerOption.title(building.getTitle());
+        //markerOption.snippet(building.getTitle());
+
+        aMap.addMarker(markerOption);//.showInfoWindow();
+    }
+
+    private void drawPolygon(DrawableVo drawable) {
+        if (drawable.getData() == null) return;
+
+        List<List<Double>> gpsData = drawable.getData().getPath();
+        if(gpsData == null || gpsData.size() < 3) return;
+
+        List<LatLng> path = new ArrayList<>();
+        for (List<Double> g : gpsData) {
+            if (g.size()<2) continue;
+            path.add(new LatLng(g.get(1), g.get(0)));
+        }
+
+        aMap.addPolygon(new PolygonOptions().addAll(path)
+                .fillColor(Color.argb(75, 204, 227, 232))
+                .strokeColor(Color.argb(90, 142, 157, 161))
+                .strokeWidth(2) );
+
+    }
+
 
 
     /**
