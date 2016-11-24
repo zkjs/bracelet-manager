@@ -21,6 +21,7 @@ import com.amap.api.maps2d.model.MarkerOptions;
 import com.amap.api.maps2d.model.Polyline;
 import com.amap.api.maps2d.model.PolylineOptions;
 import com.zkjinshi.braceletmanager.R;
+import com.zkjinshi.braceletmanager.base.BaseActivity;
 import com.zkjinshi.braceletmanager.common.http.EndpointHelper;
 import com.zkjinshi.braceletmanager.common.http.HttpLoadingCallback;
 import com.zkjinshi.braceletmanager.common.http.OkHttpHelper;
@@ -43,7 +44,7 @@ import okhttp3.Response;
  * Copyright (C) 2016 qinyejun
  */
 
-public class PatientTrackActivity extends AppCompatActivity implements AMap.InfoWindowAdapter,
+public class PatientTrackActivity extends BaseActivity implements AMap.InfoWindowAdapter,
         AMap.OnInfoWindowClickListener {
 
     @BindView(R.id.toolbar)
@@ -69,6 +70,14 @@ public class PatientTrackActivity extends AppCompatActivity implements AMap.Info
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PatientTrackActivity.this.finish();
+            }
+        });
 
         ButterKnife.bind(this);
 

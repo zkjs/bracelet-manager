@@ -14,6 +14,7 @@ import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.zkjinshi.braceletmanager.R;
+import com.zkjinshi.braceletmanager.base.BaseActivity;
 import com.zkjinshi.braceletmanager.common.http.EndpointHelper;
 import com.zkjinshi.braceletmanager.common.http.HttpLoadingCallback;
 import com.zkjinshi.braceletmanager.common.http.OkHttpHelper;
@@ -33,11 +34,12 @@ import butterknife.OnClick;
 import okhttp3.Response;
 
 /**
+ * 注册绑定病人和手环
  * Created by yejun on 11/3/16.
  * Copyright (C) 2016 qinyejun
  */
 
-public class PatientRegisterActivity extends AppCompatActivity {
+public class PatientRegisterActivity extends BaseActivity {
 
     @BindView(R.id.et_name)
     EditText mEtName;
@@ -67,6 +69,14 @@ public class PatientRegisterActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PatientRegisterActivity.this.finish();
+            }
+        });
 
         ButterKnife.bind(this);
         EventBus.getDefault().register(this);
@@ -92,11 +102,17 @@ public class PatientRegisterActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * 打开手环选择Activity
+     */
     private void chooseBracelet() {
         Intent intent = new Intent(this, BraceletChooserActivity.class);
         startActivity(intent);
     }
 
+    /**
+     * 绑定病人和手环
+     */
     private void savePatient() {
         String name = mEtName.getText().toString().trim();
         String age = mEtAge.getText().toString().trim();

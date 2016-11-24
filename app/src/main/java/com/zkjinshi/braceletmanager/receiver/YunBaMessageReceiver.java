@@ -17,7 +17,7 @@ import org.json.JSONObject;
 
 import java.util.Date;
 
-import io.yunba.android.manager.YunBaManager;
+//import io.yunba.android.manager.YunBaManager;
 
 /**
  * Created by yejun on 11/3/16.
@@ -30,7 +30,7 @@ public class YunBaMessageReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(final Context context, final Intent intent) {
-
+/*
         //云巴推送处理
         if (YunBaManager.MESSAGE_RECEIVED_ACTION.equals(intent.getAction())) {
 
@@ -68,6 +68,7 @@ public class YunBaMessageReceiver extends BroadcastReceiver {
                     .append(YunBaManager.MQTT_MSG).append(" = ").append(payload);
             Log.d(TAG, showMsg.toString());
         }
+        */
     }
 
 }

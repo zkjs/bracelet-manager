@@ -14,7 +14,7 @@ import com.zkjinshi.braceletmanager.R;
  * Copyright (C) 2016 qinyejun
  */
 
-public abstract class SingleFragmentActivity extends AppCompatActivity {
+public abstract class SingleFragmentActivity extends BaseActivity {
     protected abstract Fragment createFragment();
 
     @Override
@@ -36,15 +36,4 @@ public abstract class SingleFragmentActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    protected void onResume() {
-        // TODO Auto-generated method stub
-        super.onResume();
-    }
-
-    @Override
-    protected void onPause() {
-        // TODO Auto-generated method stub
-        super.onPause();
-    }
 }

@@ -14,4 +14,6 @@ public class Constants {
 
     public static final int MANUFACTURER_DATA = 65280;          // 蓝牙设备生产商ID
     public static final String SOS_SIGNAL = "1266";             // 紧急呼救信号
+
+    public static final String MQTT_TOPIC = "demo";             // MQTT订阅Topic key
 }

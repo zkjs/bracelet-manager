@@ -4,7 +4,10 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
-    <string name="action_settings">Settings</string>
+    <string name="settings">设置</string>
+    <string name="nav_patients">病人手环</string>
+    <string name="nav_bracelets">空余手环</string>
+    <string name="about">关于</string>
 
     <string name="loading_please_waiting">请求数据中，请稍等...</string>
     <string name="no_data">暂无数据</string>

@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.zkjinshi.braceletmanager.R;
+import com.zkjinshi.braceletmanager.base.BaseActivity;
 import com.zkjinshi.braceletmanager.common.http.EndpointHelper;
 import com.zkjinshi.braceletmanager.common.http.HttpLoadingCallback;
 import com.zkjinshi.braceletmanager.common.http.OkHttpHelper;
@@ -30,7 +31,7 @@ import okhttp3.Response;
  * Copyright (C) 2016 qinyejun
  */
 
-public class PatientDetailActivity extends AppCompatActivity {
+public class PatientDetailActivity extends BaseActivity {
 
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
@@ -56,6 +57,14 @@ public class PatientDetailActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PatientDetailActivity.this.finish();
+            }
+        });
 
         ButterKnife.bind(this);
 

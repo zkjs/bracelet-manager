@@ -18,6 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.zkjinshi.braceletmanager.R;
+import com.zkjinshi.braceletmanager.base.BaseActivity;
 import com.zkjinshi.braceletmanager.common.http.EndpointHelper;
 import com.zkjinshi.braceletmanager.common.http.HttpLoadingCallback;
 import com.zkjinshi.braceletmanager.common.http.OkHttpHelper;
@@ -43,7 +44,7 @@ import okhttp3.Response;
  * Copyright (C) 2016 qinyejun
  */
 
-public class TrackDrawActivity extends AppCompatActivity {
+public class TrackDrawActivity extends BaseActivity {
 
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
@@ -68,6 +69,14 @@ public class TrackDrawActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                TrackDrawActivity.this.finish();
+            }
+        });
 
         ButterKnife.bind(this);
 

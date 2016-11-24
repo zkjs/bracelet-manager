@@ -2,6 +2,7 @@ package com.zkjinshi.braceletmanager.common.utils;
 
 import android.content.Context;
 import android.content.res.XmlResourceParser;
+import android.text.TextUtils;
 import android.util.Log;
 import android.util.Xml;
 
@@ -93,7 +94,11 @@ public class ConfigUtil {
      * @return
      */
     public String getApiDomain(){
-        return "http://" + getConfigValue(Constants.API_HOST)+ "/";
+        String host = getConfigValue(Constants.API_HOST);
+        if (!TextUtils.isEmpty(CacheUtil.getInstance().getApiServer())) {
+            host = CacheUtil.getInstance().getApiServer();
+        }
+        return "http://" + host + "/";
     }
 
     /**

@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.text.TextUtils;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -19,9 +20,12 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.zkjinshi.braceletmanager.R;
+import com.zkjinshi.braceletmanager.base.BaseActivity;
+import com.zkjinshi.braceletmanager.base.MyApplication;
 import com.zkjinshi.braceletmanager.common.http.EndpointHelper;
 import com.zkjinshi.braceletmanager.common.http.HttpLoadingCallback;
 import com.zkjinshi.braceletmanager.common.http.OkHttpHelper;
+import com.zkjinshi.braceletmanager.common.utils.CacheUtil;
 import com.zkjinshi.braceletmanager.models.PatientVo;
 import com.zkjinshi.braceletmanager.response.BaseResponse;
 import com.zkjinshi.braceletmanager.models.SOSMessage;
@@ -34,7 +38,7 @@ import java.util.HashMap;
 
 import okhttp3.Response;
 
-public class MainActivity extends AppCompatActivity
+public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     Fragment mFragment;
@@ -78,6 +82,12 @@ public class MainActivity extends AppCompatActivity
         }
 
         EventBus.getDefault().register(this);
+
+        if(!TextUtils.isEmpty(CacheUtil.getInstance().getPassword())) {
+            MyApplication.setAuthActivityShowing(true);
+            Intent intent = new Intent(this, SigninActivity.class);
+            startActivity(intent);
+        }
     }
 
     @Override
@@ -86,6 +96,15 @@ public class MainActivity extends AppCompatActivity
         EventBus.getDefault().unregister(this);
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+    }
+
+    /**
+     * 如果侧边栏菜单打开，按back键就关闭菜单，否则调用默认事件
+     */
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -118,6 +137,11 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }*/
 
+    /**
+     * 侧边栏餐单选择事件处理
+     * @param item
+     * @return
+     */
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -127,15 +151,19 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_patients) {
             mFragment = new PatientsFragment();
             fab.show();
+            getSupportActionBar().setTitle(R.string.nav_patients);
         } else if (id == R.id.nav_bracelets) {
             mFragment = new BraceletsFragment();
             fab.hide();
+            getSupportActionBar().setTitle(R.string.nav_bracelets);
         } else if (id == R.id.nav_setting) {
             mFragment = new SettingFragment();
             fab.hide();
+            getSupportActionBar().setTitle(R.string.settings);
         } else if (id == R.id.nav_about) {
             mFragment = new AboutFragment();
             fab.hide();
+            getSupportActionBar().setTitle(R.string.about);
         }
         getFragmentManager().beginTransaction()
                 .replace(R.id.fragmentContainer, mFragment)
@@ -146,6 +174,10 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+    /**
+     * EventBus接收紧急呼救消息
+     * @param msg
+     */
     @Subscribe( threadMode = ThreadMode.MAIN)
     public void onBus(SOSMessage msg){
         //Toast.makeText(this,msg.getAlert(),Toast.LENGTH_LONG).show();
@@ -157,6 +189,10 @@ public class MainActivity extends AppCompatActivity
         Toast.makeText(this,vo.getPatientName(),Toast.LENGTH_LONG).show();
     }
 
+    /**
+     * 显示紧急呼救弹窗
+     * @param msg
+     */
     private void showMsgAlert(final SOSMessage msg) {
         new AlertDialog.Builder(this)
                 .setTitle(msg.getMessage())
@@ -175,6 +211,10 @@ public class MainActivity extends AppCompatActivity
                 .show();
     }
 
+    /**
+     * 应答紧急呼救
+     * @param msg
+     */
     private void answerSOS(SOSMessage msg) {
         HashMap<String, String> params = new HashMap<>();
         params.put("apid", msg.getApid());

@@ -32,6 +32,7 @@ import butterknife.ButterKnife;
 import okhttp3.Response;
 
 /**
+ * 手环列表
  * Created by yejun on 11/3/16.
  * Copyright (C) 2016 qinyejun
  */

@@ -115,6 +115,135 @@ public class CacheUtil {
         return sp.getString("userId", null);
     }
 
+    /**
+     * 保存用户password
+     * @param password
+     */
+    public void setPassword(String password) {
+        if (null == context) {
+            return;
+        }
+        SharedPreferences sp = context.getSharedPreferences(
+                PARKING_CACHE, Context.MODE_PRIVATE);
+        sp.edit().putString("password", password).commit();
+    }
+
+    /**
+     * 获取用户password
+     * @return
+     */
+    public String getPassword() {
+        if (null == context) {
+            return null;
+        }
+        SharedPreferences sp = context.getSharedPreferences(
+                PARKING_CACHE, Context.MODE_PRIVATE);
+        return sp.getString("password", null);
+    }
+
+    /**
+     * mqtt topic
+     * @param topic
+     */
+    public void setMqttTopic(String topic) {
+        if (null == context) {
+            return;
+        }
+        SharedPreferences sp = context.getSharedPreferences(
+                PARKING_CACHE, Context.MODE_PRIVATE);
+        sp.edit().putString("mqtt_topic", topic).commit();
+    }
+
+    /**
+     * mqtt topic
+     * @return
+     */
+    public String getMqttTopic() {
+        if (null == context) {
+            return null;
+        }
+        SharedPreferences sp = context.getSharedPreferences(
+                PARKING_CACHE, Context.MODE_PRIVATE);
+        return sp.getString("mqtt_topic", null);
+    }
+
+    /**
+     * 保存LocalServer
+     * @param host
+     */
+    public void setLocalServer(String host) {
+        if (null == context) {
+            return;
+        }
+        SharedPreferences sp = context.getSharedPreferences(
+                PARKING_CACHE, Context.MODE_PRIVATE);
+        sp.edit().putString("local_host", host).commit();
+    }
+
+    /**
+     * 获取LocalServer
+     * @return
+     */
+    public String getLocalServer() {
+        if (null == context) {
+            return null;
+        }
+        SharedPreferences sp = context.getSharedPreferences(
+                PARKING_CACHE, Context.MODE_PRIVATE);
+        return sp.getString("local_host", null);
+    }
+
+    /**
+     * 保存ApiServer
+     * @param host
+     */
+    public void setApiServer(String host) {
+        if (null == context) {
+            return;
+        }
+        SharedPreferences sp = context.getSharedPreferences(
+                PARKING_CACHE, Context.MODE_PRIVATE);
+        sp.edit().putString("api_host", host).commit();
+    }
+
+    /**
+     * 获取ApiServer
+     * @return
+     */
+    public String getApiServer() {
+        if (null == context) {
+            return null;
+        }
+        SharedPreferences sp = context.getSharedPreferences(
+                PARKING_CACHE, Context.MODE_PRIVATE);
+        return sp.getString("api_host", null);
+    }
+
+    /**
+     * 保存DeviceNo
+     * @param deviceNo
+     */
+    public void setDeviceNo(String deviceNo) {
+        if (null == context) {
+            return;
+        }
+        SharedPreferences sp = context.getSharedPreferences(
+                PARKING_CACHE, Context.MODE_PRIVATE);
+        sp.edit().putString("device_no", deviceNo).commit();
+    }
+
+    /**
+     * 获取DeviceNo
+     * @return
+     */
+    public String getDeviceNo() {
+        if (null == context) {
+            return null;
+        }
+        SharedPreferences sp = context.getSharedPreferences(
+                PARKING_CACHE, Context.MODE_PRIVATE);
+        return sp.getString("device_no", null);
+    }
 
     /**
      * 保存bracelet通知时间
