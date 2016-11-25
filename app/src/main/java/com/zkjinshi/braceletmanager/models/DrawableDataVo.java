@@ -9,13 +9,13 @@ import java.util.List;
  */
 
 public class DrawableDataVo {
-    private List<List<Double>> path = new ArrayList<>();
+    private List<List<Float>> path = new ArrayList<>();
 
-    public List<List<Double>> getPath() {
+    public List<List<Float>> getPath() {
         return path;
     }
 
-    public void setPath(List<List<Double>> path) {
+    public void setPath(List<List<Float>> path) {
         this.path = path;
     }
 }

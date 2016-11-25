@@ -7,8 +7,8 @@ package com.zkjinshi.braceletmanager.models;
 
 public class DrawableVo {
     private DrawableDataVo data;
-    private double lat;
-    private double lng;
+    private float lat;
+    private float lng;
     private String title;
     private String type;
 
@@ -24,7 +24,7 @@ public class DrawableVo {
         return lat;
     }
 
-    public void setLat(double lat) {
+    public void setLat(float lat) {
         this.lat = lat;
     }
 
@@ -32,7 +32,7 @@ public class DrawableVo {
         return lng;
     }
 
-    public void setLng(double lng) {
+    public void setLng(float lng) {
         this.lng = lng;
     }
 

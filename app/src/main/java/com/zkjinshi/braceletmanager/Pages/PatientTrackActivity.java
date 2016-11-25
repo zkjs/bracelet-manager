@@ -249,14 +249,18 @@ public class PatientTrackActivity extends BaseActivity implements AMap.InfoWindo
         aMap.addMarker(markerOption);//.showInfoWindow();
     }
 
+    /**
+     * 绘制多边形
+     * @param drawable
+     */
     private void drawPolygon(DrawableVo drawable) {
         if (drawable.getData() == null) return;
 
-        List<List<Double>> gpsData = drawable.getData().getPath();
+        List<List<Float>> gpsData = drawable.getData().getPath();
         if(gpsData == null || gpsData.size() < 3) return;
 
         List<LatLng> path = new ArrayList<>();
-        for (List<Double> g : gpsData) {
+        for (List<Float> g : gpsData) {
             if (g.size()<2) continue;
             path.add(new LatLng(g.get(1), g.get(0)));
         }
@@ -320,6 +324,10 @@ public class PatientTrackActivity extends BaseActivity implements AMap.InfoWindo
         }
     }
 
+    /**
+     * 查看病人实时轨迹
+     * @param marker
+     */
     @Override
     public void onInfoWindowClick(Marker marker) {
         Intent intent = new Intent(this, TrackDrawActivity.class);
@@ -328,6 +336,9 @@ public class PatientTrackActivity extends BaseActivity implements AMap.InfoWindo
         }
         if (sos != null) {
             intent.putExtra("sos", sos);
+        }
+        if (buildings != null && buildings.size() > 0) {
+            intent.putExtra("BuildingID", buildings.get(0).getId());
         }
         startActivity(intent);
     }
