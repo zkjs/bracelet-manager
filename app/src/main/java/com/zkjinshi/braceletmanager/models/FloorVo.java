@@ -10,7 +10,7 @@ import java.util.List;
 
 public class FloorVo {
     private List<DrawableVo> drawables = new ArrayList<>();
-    private int floors;
+    private int floor;
     private String id;
 
     public List<DrawableVo> getDrawables() {
@@ -21,12 +21,12 @@ public class FloorVo {
         this.drawables = drawables;
     }
 
-    public int getFloors() {
-        return floors;
+    public int getFloor() {
+        return floor;
     }
 
-    public void setFloors(int floors) {
-        this.floors = floors;
+    public void setFloor(int floor) {
+        this.floor = floor;
     }
 
     public String getId() {
