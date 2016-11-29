@@ -1,22 +1,23 @@
 package com.zkjinshi.braceletmanager.common.mqtt;
 
 import android.content.Context;
-import android.text.TextUtils;
 import android.util.Log;
 
-import com.amap.api.maps2d.model.Text;
-import com.zkjinshi.braceletmanager.Constants;
+import com.google.gson.Gson;
 import com.zkjinshi.braceletmanager.common.utils.CacheUtil;
+import com.zkjinshi.braceletmanager.common.utils.NotificationHelper;
+import com.zkjinshi.braceletmanager.models.SOSMessage;
 
 import org.eclipse.paho.android.service.MqttAndroidClient;
+import org.eclipse.paho.client.mqttv3.DisconnectedBufferOptions;
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
+import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.IMqttToken;
-import org.eclipse.paho.client.mqttv3.MqttClient;
+import org.eclipse.paho.client.mqttv3.MqttCallbackExtended;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
-import org.eclipse.paho.client.mqttv3.MqttSecurityException;
-import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.Date;
 
@@ -28,14 +29,16 @@ import java.util.Date;
 public class MqttManager {
     private static MqttManager instance = null;
     private Context context;
-    private MqttAndroidClient client;
-    String broker = "tcp://192.168.1.101:1883";  // Broker URL or IP Address
-    String clientId = "sample";
-    private String topic = "topic";              // Subscribe topic
-    int qos = 0;
+    private MqttAndroidClient mqttClient;
+    private String broker = "tcp://192.168.1.101";  // Broker URL or IP Address
+    private String port = "1883";
+    private String clientId = "android";
+    private String topic = "nursecall";                  // Subscribe topic
+    int qos = 1;
 
     private MqttManager(Context context) {
         this.context = context;
+        readLocalConfig();
         initMqtt();
     }
 
@@ -46,97 +49,140 @@ public class MqttManager {
         return instance;
     }
 
+    private void readLocalConfig() {
+
+        if (null != CacheUtil.getInstance().getLocalMqttPort())
+            port = CacheUtil.getInstance().getLocalMqttPort();
+
+        if (null != CacheUtil.getInstance().getDeviceNo())
+            clientId = CacheUtil.getInstance().getDeviceNo();
+
+        if (null != CacheUtil.getInstance().getLocalServer()) {
+            broker = CacheUtil.getInstance().getLocalServer();
+            broker = "tcp://" + broker + ":" + port;
+        }
+    }
+
     private void initMqtt() {
-
-        MemoryPersistence persistence = new MemoryPersistence();
-
-        client = new MqttAndroidClient(this.context, broker, clientId, persistence);
+        //MemoryPersistence persistence = new MemoryPersistence();
+        mqttClient = new MqttAndroidClient(this.context, broker, clientId);
     }
 
     public void connect() {
+        readLocalConfig();
+        mqttClient.setCallback(new MqttCallbackExtended() {
+            @Override
+            public void connectComplete(boolean reconnect, String serverURI) {
+
+                if (reconnect) {
+                    Log.i("mqtt", "reconnect");
+                    // Because Clean Session is true, we need to re-subscribe
+                    subscribeToTopic(topic);
+                } else {
+                    Log.i("mqtt", "connected");
+                }
+            }
+
+            @Override
+            public void connectionLost(Throwable cause) {
+                Log.i("mqtt", "connection lost");
+            }
+
+            @Override
+            public void messageArrived(String topic, MqttMessage message) throws Exception {
+                Log.i("mqtt", "incoming msg ["+ topic +"]: " + new String(message.getPayload()));
+
+                String msg = new String(message.getPayload());
+                SOSMessage sosMessage = new Gson().fromJson(msg, SOSMessage.class);
+
+                if(null != sosMessage) {
+                    //if (new Date().getTime() - CacheUtil.getInstance().getBraceletTime(sosMessage.getBracelet()) > 5000) {
+                    NotificationHelper.getInstance().showNotification(context, sosMessage);
+                    EventBus.getDefault().post(sosMessage);
+                    CacheUtil.getInstance().setBraceletTime(sosMessage.getBracelet(), new Date().getTime());
+                    //}
+                }
+            }
+
+            @Override
+            public void deliveryComplete(IMqttDeliveryToken token) {
+
+            }
+        });
+
+        MqttConnectOptions mqttConnectOptions = new MqttConnectOptions();
+        mqttConnectOptions.setKeepAliveInterval(3600);
+        mqttConnectOptions.setAutomaticReconnect(true);
+        mqttConnectOptions.setCleanSession(false);
+
         try {
-            MqttConnectOptions connOpts = new MqttConnectOptions();
-            connOpts.setCleanSession(true);
-            System.out.println("Connecting to broker: ");
-            //client.connect(connOpts);
-            client.connect(connOpts, new IMqttActionListener() {
+            Log.i("mqtt","Connecting to " + broker);
+            mqttClient.connect(mqttConnectOptions, this.context, new IMqttActionListener() {
                 @Override
-                public void onSuccess(IMqttToken iMqttToken) {
-                    Log.e(this.getClass().getCanonicalName(), "Mqtt Connected Success");
-                    MqttManager.this.publish("pub from android");
-                    MqttManager.this.subscribe();
+                public void onSuccess(IMqttToken asyncActionToken) {
+                    DisconnectedBufferOptions disconnectedBufferOptions = new DisconnectedBufferOptions();
+                    disconnectedBufferOptions.setBufferEnabled(true);
+                    disconnectedBufferOptions.setBufferSize(100);
+                    disconnectedBufferOptions.setPersistBuffer(false);
+                    disconnectedBufferOptions.setDeleteOldestMessages(false);
+                    mqttClient.setBufferOpts(disconnectedBufferOptions);
+                    subscribeToTopic(topic);
+                    //publish("hello mqtt");
                 }
 
                 @Override
-                public void onFailure(IMqttToken iMqttToken, Throwable throwable) {
-
+                public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
+                    Log.i("mqtt", "connect fail");
                 }
             });
-            System.out.println("Connected");
-        } catch (MqttException me) {
-            System.out.println("reason "+me.getReasonCode());
-            System.out.println("msg "+me.getMessage());
-            System.out.println("loc "+me.getLocalizedMessage());
-            System.out.println("cause "+me.getCause());
-            System.out.println("excep "+me);
-            me.printStackTrace();
+
+
+        } catch (MqttException ex){
+            ex.printStackTrace();
         }
     }
 
-    public void subscribe() {
-        String topic = Constants.MQTT_TOPIC;
-
-        if (!TextUtils.isEmpty(CacheUtil.getInstance().getMqttTopic())) {
-            topic = CacheUtil.getInstance().getMqttTopic();
-        }
-
+    public void disconnect() {
         try {
-            client.subscribe(topic, qos, context, new IMqttActionListener() {
+            mqttClient.disconnect();
+        } catch (MqttException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void subscribeToTopic(String topic){
+        try {
+            mqttClient.subscribe(topic, qos, null, new IMqttActionListener() {
                 @Override
-                public void onSuccess(IMqttToken iMqttToken) {
-                    Log.e("Mqtt", "mqtt subscribe topic success");
+                public void onSuccess(IMqttToken asyncActionToken) {
+                    Log.i("mqtt","Subscribed!");
                 }
 
                 @Override
-                public void onFailure(IMqttToken iMqttToken, Throwable throwable) {
-                    Log.e("Mqtt", "mqtt subscribe topic fail");
+                public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
+                    Log.i("mqtt","Failed to subscribe");
                 }
             });
-        } catch (MqttSecurityException e) {
-            Log.e(this.getClass().getCanonicalName(), "Failed to subscribe to" + topic , e);
-        } catch (MqttException e) {
-            Log.e(this.getClass().getCanonicalName(), "Failed to subscribe to" + topic , e);
+
+        } catch (MqttException ex){
+            System.err.println("Exception whilst subscribing");
+            ex.printStackTrace();
         }
 
     }
 
     public void publish(String content) {
-        content      = content + " : " + new Date().getTime();
-
+        //content      = content + " : " + new Date().getTime();
         try {
-            System.out.println("Publishing message: " + content);
-            MqttMessage message = new MqttMessage(content.getBytes());
-            message.setQos(qos);
+            MqttMessage msg = new MqttMessage();
 
-            client.publish(topic, content.getBytes(), qos, false, content, new IMqttActionListener() {
-                @Override
-                public void onSuccess(IMqttToken iMqttToken) {
-                    Log.e("Mqtt", "publish success");
-                }
-
-                @Override
-                public void onFailure(IMqttToken iMqttToken, Throwable throwable) {
-                    Log.e("Mqtt", "publish failure");
-                }
-            });
-            System.out.println("Message published");
-        } catch (MqttException me) {
-            System.out.println("reason "+me.getReasonCode());
-            System.out.println("msg "+me.getMessage());
-            System.out.println("loc "+me.getLocalizedMessage());
-            System.out.println("cause "+me.getCause());
-            System.out.println("excep "+me);
-            me.printStackTrace();
+            msg.setPayload(content.getBytes());
+            //msg.setId(1);
+            msg.setQos(qos);
+            mqttClient.publish(topic, msg);
+            //mqttClient.getBufferedMessage(1);
+        } catch (Exception me) {
+            Log.w(this.getClass().getSimpleName(), "-----------publich");
         }
     }
 

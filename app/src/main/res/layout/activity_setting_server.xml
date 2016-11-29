@@ -37,7 +37,7 @@
                 android:layout_marginTop="@dimen/activity_vertical_margin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="本地Server主机地址"/>
+                android:text="本地Mqtt服务器地址"/>
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -50,6 +50,21 @@
                 android:layout_marginTop="@dimen/activity_vertical_margin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="本地Mqtt服务器端口号"/>
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:id="@+id/et_local_port"
+                android:inputType="number"
+                android:text="1883"
+                android:hint="默认端口1883,一般不需要修改"/>
+
+            <TextView
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
                 android:text="API主机地址"/>
             <EditText
                 android:layout_width="match_parent"
@@ -57,19 +72,20 @@
                 android:ems="10"
                 android:id="@+id/et_api_server"
                 android:hint="例:192.168.1.8"
+                android:visibility="gone"
                 android:inputType="text|textNoSuggestions|textUri"/>
 
             <TextView
                 android:layout_marginTop="@dimen/activity_vertical_margin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="本机编号"/>
+                android:text="本设备编号"/>
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:id="@+id/et_device_no"
-                android:hint="本机编号"
+                android:hint="本设备编号"
                 android:inputType="number|textNoSuggestions"/>
 
             <Button

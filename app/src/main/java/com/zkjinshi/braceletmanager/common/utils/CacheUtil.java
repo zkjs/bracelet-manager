@@ -17,7 +17,7 @@ import java.util.Set;
 
 public class CacheUtil {
 
-    private static final String PARKING_CACHE = "smart_parking_cache";
+    private static final String PARKING_CACHE = "bracelet_manager_cache";
 
     private CacheUtil() {
     }
@@ -177,7 +177,7 @@ public class CacheUtil {
         }
         SharedPreferences sp = context.getSharedPreferences(
                 PARKING_CACHE, Context.MODE_PRIVATE);
-        sp.edit().putString("local_host", host).commit();
+        sp.edit().putString("local_server", host).commit();
     }
 
     /**
@@ -190,7 +190,33 @@ public class CacheUtil {
         }
         SharedPreferences sp = context.getSharedPreferences(
                 PARKING_CACHE, Context.MODE_PRIVATE);
-        return sp.getString("local_host", null);
+        return sp.getString("local_server", null);
+    }
+
+    /**
+     * 保存本地mqtt server port
+     * @param port
+     */
+    public void setLocalMqttPort(String port) {
+        if (null == context) {
+            return;
+        }
+        SharedPreferences sp = context.getSharedPreferences(
+                PARKING_CACHE, Context.MODE_PRIVATE);
+        sp.edit().putString("local_mqtt_port", port).commit();
+    }
+
+    /**
+     * 获取本地mqtt server port
+     * @return
+     */
+    public String getLocalMqttPort() {
+        if (null == context) {
+            return null;
+        }
+        SharedPreferences sp = context.getSharedPreferences(
+                PARKING_CACHE, Context.MODE_PRIVATE);
+        return sp.getString("local_mqtt_port", "1883");
     }
 
     /**

@@ -1,7 +1,6 @@
 package com.zkjinshi.braceletmanager.Pages;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
@@ -10,6 +9,7 @@ import android.widget.Toast;
 
 import com.zkjinshi.braceletmanager.R;
 import com.zkjinshi.braceletmanager.base.BaseActivity;
+import com.zkjinshi.braceletmanager.common.mqtt.MqttManager;
 import com.zkjinshi.braceletmanager.common.utils.CacheUtil;
 
 import butterknife.BindView;
@@ -30,6 +30,10 @@ public class SettingServerActivity extends BaseActivity {
     EditText mEtApiServer;
     @BindView(R.id.et_device_no)
     EditText mEtDeviceNo;
+    @BindView(R.id.toolbar)
+    Toolbar mToolbar;
+    @BindView(R.id.et_local_port)
+    EditText mEtLocalPort;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -67,16 +71,22 @@ public class SettingServerActivity extends BaseActivity {
     @OnClick(R.id.btn_confirm)
     public void onClick() {
         String local = mEtLocalServer.getText().toString().trim();
-        String api = mEtApiServer.getText().toString().trim();
+        String port = mEtLocalPort.getText().toString().trim();
+        //String api = mEtApiServer.getText().toString().trim();
         String deviceNo = mEtDeviceNo.getText().toString().trim();
-        if (TextUtils.isEmpty(local) || TextUtils.isEmpty(api) || TextUtils.isEmpty(deviceNo)) {
+        if (TextUtils.isEmpty(local) || TextUtils.isEmpty(port) || TextUtils.isEmpty(deviceNo)) {
             Toast.makeText(this, "请将所有字段填写完整", Toast.LENGTH_SHORT).show();
             return;
         }
 
         CacheUtil.getInstance().setLocalServer(local);
-        CacheUtil.getInstance().setApiServer(api);
+        CacheUtil.getInstance().setLocalMqttPort(port);
         CacheUtil.getInstance().setDeviceNo(deviceNo);
+
+        if (CacheUtil.getInstance().getLocalServer() != null) {
+            MqttManager mqttManager = MqttManager.getInstance(getApplicationContext());
+            mqttManager.connect();
+        }
 
         finish();
     }

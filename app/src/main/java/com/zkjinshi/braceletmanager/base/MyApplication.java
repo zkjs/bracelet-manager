@@ -7,20 +7,9 @@ import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.zkjinshi.braceletmanager.Constants;
 import com.zkjinshi.braceletmanager.common.mqtt.MqttManager;
 import com.zkjinshi.braceletmanager.common.utils.CacheUtil;
 import com.zkjinshi.braceletmanager.common.utils.ConfigUtil;
-import com.zkjinshi.braceletmanager.service.MyMqttService;
-
-import org.eclipse.paho.android.service.MqttAndroidClient;
-import org.eclipse.paho.client.mqttv3.IMqttActionListener;
-import org.eclipse.paho.client.mqttv3.IMqttToken;
-import org.eclipse.paho.client.mqttv3.MqttClient;
-import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
-import org.eclipse.paho.client.mqttv3.MqttException;
-import org.eclipse.paho.client.mqttv3.MqttMessage;
-import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -29,7 +18,6 @@ import java.io.InputStream;
 import java.util.Iterator;
 import java.util.List;
 
-//import io.yunba.android.manager.YunBaManager;
 
 /**
  * Created by yejun on 11/3/16.
@@ -55,60 +43,13 @@ public class MyApplication  extends BaseApplication {
         initCache();
         saveConfig();
         initMqtt();
-
-//        YunBaManager.start(getApplicationContext());
-//        YunBaManager.subscribe(getApplicationContext(), new String[]{Constants.YUNBA_TOPIC}, new IMqttActionListener() {
-//
-//            @Override
-//            public void onSuccess(IMqttToken arg0) {
-//                Log.d(TAG, "Yunba: Subscribe topic succeed");
-//            }
-//
-//            @Override
-//            public void onFailure(IMqttToken arg0, Throwable arg1) {
-//                Log.d(TAG, "Yunba: Subscribe topic failed");
-//            }
-//        });
     }
 
     private void initMqtt() {
-        /*String broker = "tcp://192.168.1.101:1883";
-        String clientId = "sample";
-        int qos = 0;
-        String topic = "topic";
-        MemoryPersistence persistence = new MemoryPersistence();
-        String content      = "Message from android";
-
-        try {
-            MqttClient client = new MqttClient(broker, clientId, persistence);
-            MqttConnectOptions connOpts = new MqttConnectOptions();
-            connOpts.setCleanSession(true);
-            System.out.println("Connecting to broker: " + broker);
-            client.connect(connOpts);
-            System.out.println("Connected");
-            System.out.println("Publishing message: " + content);
-            MqttMessage message = new MqttMessage(content.getBytes());
-            message.setQos(qos);
-            client.publish(topic, message);
-            System.out.println("Message published");
-        } catch (MqttException me) {
-            System.out.println("reason "+me.getReasonCode());
-            System.out.println("msg "+me.getMessage());
-            System.out.println("loc "+me.getLocalizedMessage());
-            System.out.println("cause "+me.getCause());
-            System.out.println("excep "+me);
-            me.printStackTrace();
-        }*/
-
-        //MqttManager mqttManager = MqttManager.getInstance(getApplicationContext());
-        //mqttManager.connect();
-        //mqttManager.publish();
-        MyMqttService.actionStart(getApplicationContext());
-
-    }
-
-    private void subscribeMqtt() {
-
+        if (CacheUtil.getInstance().getLocalServer() != null) {
+            MqttManager mqttManager = MqttManager.getInstance(getApplicationContext());
+            mqttManager.connect();
+        }
     }
 
     public static Context getContext(){

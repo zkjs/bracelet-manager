@@ -51,7 +51,7 @@ public class MyMqttService extends Service implements MqttCallback {
 
     private static final String MQTT_THREAD_NAME = "MyMqttService[" + DEBUG_TAG + "]"; // Handler Thread ID
 
-    private static final String MQTT_BROKER = "192.168.1.101"; // Broker URL or IP Address
+    private static final String MQTT_BROKER = "192.168.1.199"; // Broker URL or IP Address
     private static final int MQTT_PORT = 1883; // Broker Port
 
     public static final int MQTT_QOS_0 = 0; // QOS Level 0 ( Delivery Once no confirmation )
@@ -91,7 +91,7 @@ public class MyMqttService extends Service implements MqttCallback {
     private AlarmManager mAlarmManager; // Alarm manager to perform repeating tasks
     private ConnectivityManager mConnectivityManager; // To check for connectivity changes
 
-    private String SUBSCRIBE_TOPIC = "topic";
+    private String SUBSCRIBE_TOPIC = "nursecall";
 
     /**
      * Start MQTT Client

@@ -137,7 +137,7 @@ public class TrackDrawView extends View {
     public void setFloor(int floor) {
         this.floor = floor;
         this.mPosX = 0;
-        this.mPosY` = 0;
+        this.mPosY = 0;
         invalidate();
     }
 
