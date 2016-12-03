@@ -40,7 +40,7 @@ public class TrackDrawView extends View {
     private List<FloorVo> floors;
     private int floor = 2;
 
-    final float measure = 960;          //轨迹地图坐标基准尺寸，即通过api获取的坐标比例尺为960
+    final float measure = 6000;          //轨迹地图坐标基准尺寸，即通过api获取的坐标比例尺为6000
     final float scale = getResources().getDisplayMetrics().density; //当前屏幕分辨率
     final int padding = 20;             // 界面留白尺寸
     final int textSize = 30;            // 界面文字大小
@@ -412,7 +412,7 @@ public class TrackDrawView extends View {
      */
     private List<Float> convertFloorCoords(List<Float> origin) {
         int minSize = Math.min(screenHeight, screenWidth) - padding * 2;
-        float s = minSize / (float) 6000;
+        float s = minSize / measure;
         return Arrays.asList(origin.get(0) * s + padding * 2, origin.get(1) * s + padding);
     }
 

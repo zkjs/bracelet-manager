@@ -12,6 +12,8 @@ import com.zkjinshi.braceletmanager.base.BaseActivity;
 import com.zkjinshi.braceletmanager.common.mqtt.MqttManager;
 import com.zkjinshi.braceletmanager.common.utils.CacheUtil;
 
+import org.greenrobot.eventbus.EventBus;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -24,16 +26,19 @@ import butterknife.OnClick;
 
 public class SettingServerActivity extends BaseActivity {
 
-    @BindView(R.id.et_local_server)
-    EditText mEtLocalServer;
-    @BindView(R.id.et_api_server)
+    @BindView(R.id.et_local_mqtt_server)
+    EditText mEtMqttServer;
+    @BindView(R.id.et_local_api_server)
     EditText mEtApiServer;
+    @BindView(R.id.et_local_mqtt_port)
+    EditText mEtMqttPort;
+    @BindView(R.id.et_local_api_port)
+    EditText mEtApiPort;
     @BindView(R.id.et_device_no)
     EditText mEtDeviceNo;
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
-    @BindView(R.id.et_local_port)
-    EditText mEtLocalPort;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -57,11 +62,17 @@ public class SettingServerActivity extends BaseActivity {
     }
 
     private void initView() {
-        if (!TextUtils.isEmpty(CacheUtil.getInstance().getLocalServer())) {
-            mEtLocalServer.setText(CacheUtil.getInstance().getLocalServer());
+        if (!TextUtils.isEmpty(CacheUtil.getInstance().getLocalMqttServer())) {
+            mEtMqttServer.setText(CacheUtil.getInstance().getLocalMqttServer());
         }
-        if (!TextUtils.isEmpty(CacheUtil.getInstance().getApiServer())) {
-            mEtApiServer.setText(CacheUtil.getInstance().getApiServer());
+        if (!TextUtils.isEmpty(CacheUtil.getInstance().getLocalMqttPort())) {
+            mEtMqttPort.setText(CacheUtil.getInstance().getLocalMqttPort());
+        }
+        if (!TextUtils.isEmpty(CacheUtil.getInstance().getLocalApiServer())) {
+            mEtApiServer.setText(CacheUtil.getInstance().getLocalApiServer());
+        }
+        if (!TextUtils.isEmpty(CacheUtil.getInstance().getLocalApiPort())) {
+            mEtApiPort.setText(CacheUtil.getInstance().getLocalApiPort());
         }
         if (!TextUtils.isEmpty(CacheUtil.getInstance().getDeviceNo())) {
             mEtDeviceNo.setText(CacheUtil.getInstance().getDeviceNo());
@@ -70,23 +81,30 @@ public class SettingServerActivity extends BaseActivity {
 
     @OnClick(R.id.btn_confirm)
     public void onClick() {
-        String local = mEtLocalServer.getText().toString().trim();
-        String port = mEtLocalPort.getText().toString().trim();
-        //String api = mEtApiServer.getText().toString().trim();
+        String mqttServer = mEtMqttServer.getText().toString().trim();
+        String mqttPort = mEtMqttPort.getText().toString().trim();
+        String apiServer = mEtApiServer.getText().toString().trim();
+        String apiPort = mEtApiPort.getText().toString().trim();
         String deviceNo = mEtDeviceNo.getText().toString().trim();
-        if (TextUtils.isEmpty(local) || TextUtils.isEmpty(port) || TextUtils.isEmpty(deviceNo)) {
+        if (TextUtils.isEmpty(mqttServer) || TextUtils.isEmpty(mqttPort)
+                || TextUtils.isEmpty(apiServer) || TextUtils.isEmpty(apiPort)
+                || TextUtils.isEmpty(deviceNo)) {
             Toast.makeText(this, "请将所有字段填写完整", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        CacheUtil.getInstance().setLocalServer(local);
-        CacheUtil.getInstance().setLocalMqttPort(port);
+        CacheUtil.getInstance().setLocalMqttServer(mqttServer);
+        CacheUtil.getInstance().setLocalMqttPort(mqttPort);
+        CacheUtil.getInstance().setLocalApiServer(apiServer);
+        CacheUtil.getInstance().setLocalApiPort(apiPort);
         CacheUtil.getInstance().setDeviceNo(deviceNo);
 
-        if (CacheUtil.getInstance().getLocalServer() != null) {
+        if (CacheUtil.getInstance().getLocalMqttServer() != null) {
             MqttManager mqttManager = MqttManager.getInstance(getApplicationContext());
             mqttManager.connect();
         }
+
+        EventBus.getDefault().post("configChanged");
 
         finish();
     }

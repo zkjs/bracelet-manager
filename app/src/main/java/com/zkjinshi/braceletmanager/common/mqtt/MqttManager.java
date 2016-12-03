@@ -33,7 +33,7 @@ public class MqttManager {
     private String broker = "tcp://192.168.1.101";  // Broker URL or IP Address
     private String port = "1883";
     private String clientId = "android";
-    private String topic = "nursecall";                  // Subscribe topic
+    private String topic = "sos";                  // Subscribe topic
     int qos = 1;
 
     private MqttManager(Context context) {
@@ -57,8 +57,8 @@ public class MqttManager {
         if (null != CacheUtil.getInstance().getDeviceNo())
             clientId = CacheUtil.getInstance().getDeviceNo();
 
-        if (null != CacheUtil.getInstance().getLocalServer()) {
-            broker = CacheUtil.getInstance().getLocalServer();
+        if (null != CacheUtil.getInstance().getLocalMqttServer()) {
+            broker = CacheUtil.getInstance().getLocalMqttServer();
             broker = "tcp://" + broker + ":" + port;
         }
     }

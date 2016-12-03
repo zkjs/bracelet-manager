@@ -13,4 +13,8 @@
     <string name="no_data">暂无数据</string>
 
     <string name="answer_sos">应答</string>
+
+    <string name="connect">连接成功</string>
+    <string name="disconnect">连接已断开，请检查网络是否畅通</string>
+    <string name="error_connect">网络连接错误</string>
 </resources>

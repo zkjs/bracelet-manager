@@ -91,7 +91,7 @@ public class MyMqttService extends Service implements MqttCallback {
     private AlarmManager mAlarmManager; // Alarm manager to perform repeating tasks
     private ConnectivityManager mConnectivityManager; // To check for connectivity changes
 
-    private String SUBSCRIBE_TOPIC = "nursecall";
+    private String SUBSCRIBE_TOPIC = "sos";
 
     /**
      * Start MQTT Client

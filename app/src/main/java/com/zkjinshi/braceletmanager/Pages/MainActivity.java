@@ -91,6 +91,15 @@ public class MainActivity extends BaseActivity
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        if (CacheUtil.getInstance().getLocalApiServer() == null || CacheUtil.getInstance().getLocalMqttServer() == null) {
+            Intent intent = new Intent(this, SettingServerActivity.class);
+            startActivity(intent);
+        }
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);

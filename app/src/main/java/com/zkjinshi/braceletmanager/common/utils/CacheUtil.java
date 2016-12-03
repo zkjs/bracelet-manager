@@ -171,26 +171,26 @@ public class CacheUtil {
      * 保存LocalServer
      * @param host
      */
-    public void setLocalServer(String host) {
+    public void setLocalMqttServer(String host) {
         if (null == context) {
             return;
         }
         SharedPreferences sp = context.getSharedPreferences(
                 PARKING_CACHE, Context.MODE_PRIVATE);
-        sp.edit().putString("local_server", host).commit();
+        sp.edit().putString("local_mqtt_server", host).commit();
     }
 
     /**
      * 获取LocalServer
      * @return
      */
-    public String getLocalServer() {
+    public String getLocalMqttServer() {
         if (null == context) {
             return null;
         }
         SharedPreferences sp = context.getSharedPreferences(
                 PARKING_CACHE, Context.MODE_PRIVATE);
-        return sp.getString("local_server", null);
+        return sp.getString("local_mqtt_server", null);
     }
 
     /**
@@ -223,26 +223,52 @@ public class CacheUtil {
      * 保存ApiServer
      * @param host
      */
-    public void setApiServer(String host) {
+    public void setLocalApiServer(String host) {
         if (null == context) {
             return;
         }
         SharedPreferences sp = context.getSharedPreferences(
                 PARKING_CACHE, Context.MODE_PRIVATE);
-        sp.edit().putString("api_host", host).commit();
+        sp.edit().putString("local_api_host", host).commit();
     }
 
     /**
      * 获取ApiServer
      * @return
      */
-    public String getApiServer() {
+    public String getLocalApiServer() {
         if (null == context) {
             return null;
         }
         SharedPreferences sp = context.getSharedPreferences(
                 PARKING_CACHE, Context.MODE_PRIVATE);
-        return sp.getString("api_host", null);
+        return sp.getString("local_api_host", null);
+    }
+
+    /**
+     * 保存本地 api server port
+     * @param port
+     */
+    public void setLocalApiPort(String port) {
+        if (null == context) {
+            return;
+        }
+        SharedPreferences sp = context.getSharedPreferences(
+                PARKING_CACHE, Context.MODE_PRIVATE);
+        sp.edit().putString("local_api_port", port).commit();
+    }
+
+    /**
+     * 获取本地 api server port
+     * @return
+     */
+    public String getLocalApiPort() {
+        if (null == context) {
+            return null;
+        }
+        SharedPreferences sp = context.getSharedPreferences(
+                PARKING_CACHE, Context.MODE_PRIVATE);
+        return sp.getString("local_api_port", "80");
     }
 
     /**

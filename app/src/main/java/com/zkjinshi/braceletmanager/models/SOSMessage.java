@@ -10,6 +10,7 @@ import java.io.Serializable;
 
 public class SOSMessage implements Serializable {
     private String apid;
+    private int floor;
     private String payload;
     private int rssi;
     private String message;
@@ -22,6 +23,14 @@ public class SOSMessage implements Serializable {
 
     public void setApid(String apid) {
         this.apid = apid;
+    }
+
+    public int getFloor() {
+        return floor;
+    }
+
+    public void setFloor(int floor) {
+        this.floor = floor;
     }
 
     public String getPayload() {

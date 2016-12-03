@@ -46,7 +46,7 @@ public class MyApplication  extends BaseApplication {
     }
 
     private void initMqtt() {
-        if (CacheUtil.getInstance().getLocalServer() != null) {
+        if (CacheUtil.getInstance().getLocalMqttServer() != null) {
             MqttManager mqttManager = MqttManager.getInstance(getApplicationContext());
             mqttManager.connect();
         }

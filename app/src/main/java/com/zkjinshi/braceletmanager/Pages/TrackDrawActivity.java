@@ -4,6 +4,7 @@ import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.widget.AdapterView;
@@ -12,12 +13,15 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.zkjinshi.braceletmanager.R;
 import com.zkjinshi.braceletmanager.base.BaseActivity;
 import com.zkjinshi.braceletmanager.common.http.EndpointHelper;
 import com.zkjinshi.braceletmanager.common.http.HttpLoadingCallback;
 import com.zkjinshi.braceletmanager.common.http.OkHttpHelper;
+import com.zkjinshi.braceletmanager.common.utils.ConfigUtil;
 import com.zkjinshi.braceletmanager.common.utils.DialogUtil;
 import com.zkjinshi.braceletmanager.models.AccessPointVo;
 import com.zkjinshi.braceletmanager.models.FloorVo;
@@ -28,12 +32,19 @@ import com.zkjinshi.braceletmanager.response.NormalResponse;
 import com.zkjinshi.braceletmanager.response.data.NormalListData;
 import com.zkjinshi.braceletmanager.response.data.TrackListData;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.socket.client.IO;
+import io.socket.client.Socket;
+import io.socket.emitter.Emitter;
 import okhttp3.Response;
 
 /**
@@ -43,6 +54,10 @@ import okhttp3.Response;
  */
 
 public class TrackDrawActivity extends BaseActivity implements TrackDrawView.ZoomListener {
+    private final static String EVENT_NEW_LOCATION = "position";
+    private final static String EVENT_ROLE = "role";
+    private final static String EVENT_READY = "ready";
+    private final static String EVENT_BRACELET = "sub";
 
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
@@ -60,7 +75,7 @@ public class TrackDrawActivity extends BaseActivity implements TrackDrawView.Zoo
     Spinner mSpFloorSwitch;
 
     private String bracelet;
-    private List<TrackPointVo> track;
+    private List<TrackPointVo> track = new ArrayList<>();
     private List<AccessPointVo> aps;
     private List<FloorVo> floors;
     private SOSMessage sos;
@@ -70,6 +85,17 @@ public class TrackDrawActivity extends BaseActivity implements TrackDrawView.Zoo
     private ArrayAdapter<String> floor_arr_adapter;
 
     private TrackDrawView trackView;
+    private Gson mGson = new Gson();
+
+    private Socket mSocket;
+    {
+        try {
+            Log.i("socket",ConfigUtil.getInstance().getSocketIODomain());
+            mSocket = IO.socket(ConfigUtil.getInstance().getSocketIODomain());
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,6 +118,20 @@ public class TrackDrawActivity extends BaseActivity implements TrackDrawView.Zoo
         initMapView();
         loadFloorsData();
         loadTrackData();
+        initSocket();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mSocket.disconnect();
+
+        mSocket.off(Socket.EVENT_CONNECT);
+        mSocket.off(Socket.EVENT_DISCONNECT);
+        mSocket.off(Socket.EVENT_CONNECT_ERROR);
+        mSocket.off(Socket.EVENT_CONNECT_TIMEOUT);
+        mSocket.off(EVENT_NEW_LOCATION);
+        mSocket.off(EVENT_READY);
     }
 
     /**
@@ -125,6 +165,16 @@ public class TrackDrawActivity extends BaseActivity implements TrackDrawView.Zoo
 
             }
         });
+    }
+
+    private void initSocket() {
+        mSocket.on(Socket.EVENT_CONNECT,onConnect);
+        mSocket.on(Socket.EVENT_DISCONNECT,onDisconnect);
+        mSocket.on(Socket.EVENT_CONNECT_ERROR, onConnectError);
+        mSocket.on(Socket.EVENT_CONNECT_TIMEOUT, onConnectError);
+        mSocket.on(EVENT_NEW_LOCATION, onNewLocation);
+        mSocket.on(EVENT_READY, onReady);
+        mSocket.connect();
     }
 
     /**
@@ -243,6 +293,75 @@ public class TrackDrawActivity extends BaseActivity implements TrackDrawView.Zoo
             mBtnZoomout.setEnabled(true);
         }
     }
+
+    //// socket.io events
+
+    private Emitter.Listener onConnect = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+            mSocket.emit(EVENT_ROLE, "app");
+        }
+    };
+
+    private Emitter.Listener onDisconnect = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                Toast.makeText(getApplicationContext(),
+                        R.string.disconnect, Toast.LENGTH_LONG).show();
+                }
+            });
+        }
+    };
+
+    private Emitter.Listener onConnectError = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                Toast.makeText(getApplicationContext(),
+                        R.string.error_connect, Toast.LENGTH_LONG).show();
+                }
+            });
+        }
+    };
+
+    private Emitter.Listener onNewLocation = new Emitter.Listener() {
+        @Override
+        public void call(final Object... args) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Log.i("socket", args[0].toString());
+                    JSONObject data = (JSONObject) args[0];
+                    try {
+                        String id = data.getString("id");
+                        String position = data.getString("position");
+                        if (!id.equals(bracelet)) return;
+
+                        TrackPointVo t = mGson.fromJson(position, TrackPointVo.class);
+                        if (t != null && track != null) {
+                            track.add(t);
+                            trackView.setTrack(track);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            });
+        }
+    };
+
+    private Emitter.Listener onReady = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+            mSocket.emit(EVENT_BRACELET, bracelet);
+        }
+    };
 
 
 }

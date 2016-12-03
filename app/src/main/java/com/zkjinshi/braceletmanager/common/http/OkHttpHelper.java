@@ -46,16 +46,19 @@ public class OkHttpHelper {
     }
 
     public void get(String url, HttpBaseCallback callback) {
+        if (CacheUtil.getInstance().getLocalApiServer() == null) return;
         Request request = buildRequest(url,null,HttpMethodType.GET);
         doRequest(request, callback);
     }
 
     public void post(String url, Map<String,String> params, HttpBaseCallback callback) {
+        if (CacheUtil.getInstance().getLocalApiServer() == null) return;
         Request request = buildRequest(url,params,HttpMethodType.POST);
         doRequest(request, callback);
     }
 
     public void put(String url, Map<String,String> params, HttpBaseCallback callback) {
+        if (CacheUtil.getInstance().getLocalApiServer() == null) return;
         Request request = buildRequest(url,params,HttpMethodType.PUT);
         doRequest(request, callback);
     }

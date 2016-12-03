@@ -138,7 +138,7 @@ public class PatientsFragment extends Fragment {
 
     @Subscribe( threadMode = ThreadMode.MAIN)
     public void onBus(String result){
-        if (result.equals("BindSuccess") || result.equals("UnbindSuccess")) {
+        if (result.equals("BindSuccess") || result.equals("UnbindSuccess") || result.equals("configChanged")) {
             loadData();
         }
     }

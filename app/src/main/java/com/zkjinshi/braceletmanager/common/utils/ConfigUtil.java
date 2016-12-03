@@ -94,11 +94,23 @@ public class ConfigUtil {
      * @return
      */
     public String getApiDomain(){
-        String host = getConfigValue(Constants.API_HOST);
-        if (!TextUtils.isEmpty(CacheUtil.getInstance().getApiServer())) {
-            host = CacheUtil.getInstance().getApiServer();
+        String host = CacheUtil.getInstance().getLocalApiServer();
+        String port = CacheUtil.getInstance().getLocalApiPort();
+        if (host == null) return "";
+        if (port != null && !port.equals("80")) {
+            host = host + ":" + port;
         }
         return "http://" + host + "/";
+    }
+
+    public String getRemoteApiDomain(){
+        String host = getConfigValue(Constants.REMOTE_API_HOST);
+        return "http://" + host + "/";
+    }
+
+    public String getSocketIODomain(){
+        String host = getConfigValue(Constants.SOCKET_IO_HOST);
+        return "http://" + host;
     }
 
     /**

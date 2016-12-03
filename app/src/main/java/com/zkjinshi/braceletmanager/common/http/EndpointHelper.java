@@ -22,15 +22,15 @@ public class EndpointHelper {
      * @return
      */
     public static String braceletTrack(String bracelet){
-        return  ConfigUtil.getInstance().getApiDomain()+"track/" + bracelet;
+        return  ConfigUtil.getInstance().getRemoteApiDomain()+"track/" + bracelet;
     }
 
     /**
-     * 手环轨迹(相对指标)
+     * 手环轨迹(相对坐标)
      * @return
      */
     public static String braceletTrackCoords(String bracelet){
-        return  ConfigUtil.getInstance().getApiDomain()+"track/rel/" + bracelet;
+        return  ConfigUtil.getInstance().getRemoteApiDomain()+"track/rel/" + bracelet;
     }
 
     /**
@@ -63,14 +63,6 @@ public class EndpointHelper {
      */
     public static String unbindBracelet(String bracelet){
         return  ConfigUtil.getInstance().getApiDomain()+"bracelet/binded/" + bracelet;
-    }
-
-    /**
-     * 病人轨迹
-     * @return
-     */
-    public static String patientTrack(String bracelet) {
-        return  ConfigUtil.getInstance().getApiDomain()+"track/" + bracelet;
     }
 
     /**
