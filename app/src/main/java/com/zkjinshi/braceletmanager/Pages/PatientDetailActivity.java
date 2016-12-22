@@ -83,10 +83,9 @@ public class PatientDetailActivity extends BaseActivity {
 
     /**
      * 解绑手环
-     * @param view
      */
     @OnClick(R.id.btn_confirm)
-    public void onClick(View view) {
+    public void unBind() {
         String url = EndpointHelper.unbindBracelet(patient.getBracelet());
         HashMap<String, String> params = new HashMap<>();
         params.put("patientName", patient.getPatientName());
@@ -112,9 +111,19 @@ public class PatientDetailActivity extends BaseActivity {
      * 查看病人轨迹
      */
     @OnClick(R.id.btn_track)
-    public void onClick() {
+    public void viewTrack() {
         Intent intent = new Intent(this, PatientTrackActivity.class);
-        intent.putExtra("patient",patient);
+        intent.putExtra("patient", patient);
+        startActivity(intent);
+    }
+
+    /**
+     * 查看照片
+     */
+    @OnClick(R.id.btn_photos)
+    public void viewPhotos() {
+        Intent intent = new Intent(this, BraceletPhotosActivity.class);
+        intent.putExtra("patient", patient);
         startActivity(intent);
     }
 }

@@ -45,7 +45,7 @@ public class TrackDrawView extends View {
     final int padding = 20;             // 界面留白尺寸
     final int textSize = 30;            // 界面文字大小
     final int lineColor = Color.GRAY;   // 轨迹线颜色
-    final int lineWidth = 6;            // 轨迹线宽度
+    final int lineWidth = 4;            // 轨迹线宽度
     final int apColor = Color.BLUE;     // AP 标志点的颜色
     final int startColor = Color.CYAN;  // 轨迹开始点颜色
     final int endColor = Color.RED;     // 轨迹结束点颜色
@@ -390,9 +390,9 @@ public class TrackDrawView extends View {
             fontSize = fontSize/fontScale;
             fontWidth = roomWidth / count;
             if (fontSize < 1) fontSize = 1;
-            p.setColor(Color.RED);
+            //p.setColor(Color.RED);
         } else {
-            p.setColor(Color.GRAY);
+            //p.setColor(Color.GRAY);
         }
 
         startPointX = centerX - fontWidth*count/4;
@@ -411,9 +411,9 @@ public class TrackDrawView extends View {
      * @return
      */
     private List<Float> convertFloorCoords(List<Float> origin) {
-        int minSize = Math.min(screenHeight, screenWidth) - padding * 2;
+        int minSize = Math.min(screenHeight, screenWidth);
         float s = minSize / measure;
-        return Arrays.asList(origin.get(0) * s + padding * 2, origin.get(1) * s + padding);
+        return Arrays.asList(origin.get(0) * s + padding , origin.get(1) * s + padding);
     }
 
     /**
@@ -423,9 +423,9 @@ public class TrackDrawView extends View {
      * @return
      */
     private Gps convertCoords(Gps gps) {
-        int minSize = Math.min(screenHeight, screenWidth) - padding * 2;
+        int minSize = Math.min(screenHeight, screenWidth);
         double s = minSize / measure;
-        return new Gps(gps.getLat() * s + padding * 2, gps.getLng() * s + padding);
+        return new Gps(gps.getLat() * s + padding , gps.getLng() * s + padding);
     }
 
     /**

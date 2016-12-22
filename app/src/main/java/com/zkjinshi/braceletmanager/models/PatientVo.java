@@ -15,6 +15,7 @@ public class PatientVo implements Serializable {
     private String patientRemark;
     private String patientRoom;
     private String patientAge;
+    private int attached;
 
     public String getBracelet() {
         return bracelet;
@@ -70,5 +71,13 @@ public class PatientVo implements Serializable {
 
     public void setPatientAge(String patientAge) {
         this.patientAge = patientAge;
+    }
+
+    public int getAttached() {
+        return attached;
+    }
+
+    public void setAttached(int attached) {
+        this.attached = attached;
     }
 }

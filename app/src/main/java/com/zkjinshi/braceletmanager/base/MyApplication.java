@@ -7,6 +7,9 @@ import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.imagepipeline.core.ImagePipelineConfig;
+import com.facebook.imagepipeline.decoder.SimpleProgressiveJpegConfig;
 import com.zkjinshi.braceletmanager.common.mqtt.MqttManager;
 import com.zkjinshi.braceletmanager.common.utils.CacheUtil;
 import com.zkjinshi.braceletmanager.common.utils.ConfigUtil;
@@ -43,6 +46,14 @@ public class MyApplication  extends BaseApplication {
         initCache();
         saveConfig();
         initMqtt();
+
+        //Fresco.initialize(this);
+        ImagePipelineConfig config = ImagePipelineConfig.newBuilder(this)
+                .setProgressiveJpegConfig(new SimpleProgressiveJpegConfig())
+                .setResizeAndRotateEnabledForNetwork(true)
+                .setDownsampleEnabled(true)
+                .build();
+        Fresco.initialize(this, config);
     }
 
     private void initMqtt() {

@@ -81,4 +81,13 @@ public class EndpointHelper {
         return  ConfigUtil.getInstance().getApiDomain()+"map/" + buildingID;
     }
 
+    /**
+     * 手环照片
+     * @param bracelet
+     * @return
+     */
+    public static String braceletPhotos(String bracelet) {
+        return  ConfigUtil.getInstance().getApiDomain()+"bracelet/photos/" + bracelet;
+    }
+
 }

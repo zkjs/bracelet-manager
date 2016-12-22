@@ -199,7 +199,7 @@ public class TrackDrawActivity extends BaseActivity implements TrackDrawView.Zoo
     private void loadTrackData() {
         if (bracelet == null || TextUtils.isEmpty(bracelet)) return;
 
-        String url = EndpointHelper.braceletTrackCoords(bracelet);
+        String url = EndpointHelper.braceletTrack(bracelet);
         OkHttpHelper.getInstance().get(url, new HttpLoadingCallback<NormalResponse<TrackListData>>(this) {
 
             @Override

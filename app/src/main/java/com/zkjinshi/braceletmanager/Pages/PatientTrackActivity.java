@@ -99,7 +99,7 @@ public class PatientTrackActivity extends BaseActivity implements AMap.InfoWindo
         aMap.setInfoWindowAdapter(this);
         aMap.setOnInfoWindowClickListener(this);
 
-        loadTrackData();
+        //loadTrackData();
         loadBuildingData();
     }
 
@@ -222,9 +222,14 @@ public class PatientTrackActivity extends BaseActivity implements AMap.InfoWindo
         if (buildings == null || buildings.size() == 0) {
             return;
         }
+        LatLngBounds.Builder boundsBuilder = new LatLngBounds.Builder();
+
         for (BuildingVo b : buildings) {
             drawBuilding(b);
+            boundsBuilder.include(new LatLng(b.getLat(), b.getLng()));
         }
+
+        aMap.moveCamera(CameraUpdateFactory.newLatLngBounds(boundsBuilder.build(), 10));
     }
 
     /**
@@ -243,10 +248,17 @@ public class PatientTrackActivity extends BaseActivity implements AMap.InfoWindo
         MarkerOptions markerOption = new MarkerOptions().anchor(0.5f, 0.5f)
                 .position(new LatLng(building.getLat(), building.getLng()));
 
-        markerOption.title(building.getTitle());
-        //markerOption.snippet(building.getTitle());
+        if (sos != null) {
+            markerOption.title(sos.getMessage());
+            markerOption.snippet(sos.getAddress());
+        } else if ( patient != null ) {
+            markerOption.title(patient.getPatientName());
+        } else {
+            markerOption.title(building.getTitle());
+            markerOption.snippet(building.getTitle());
+        }
 
-        aMap.addMarker(markerOption);//.showInfoWindow();
+        aMap.addMarker(markerOption).showInfoWindow();
     }
 
     /**

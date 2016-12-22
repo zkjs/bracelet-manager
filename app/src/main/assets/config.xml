@@ -2,9 +2,8 @@
 <config>
 
     <!--api host-->
-    <!--<api-host>120.25.80.143:8090</api-host>-->
-    <remote-api-host>192.168.1.116:8090</remote-api-host>
-    <socketio>192.168.1.124:8000/app</socketio>
+    <remote-api-host>120.25.80.143:8090</remote-api-host>
+    <socketio>120.25.80.143:9000/app</socketio>
     <!--cdn图片(资源服务)-->
     <cdn-host>cdn.zkjinshi.com</cdn-host>
     <!--pcm图片(资源服务)-->

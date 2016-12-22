@@ -307,7 +307,7 @@ public class CacheUtil {
         }
         SharedPreferences sp = context.getSharedPreferences(
                 PARKING_CACHE, Context.MODE_PRIVATE);
-        sp.edit().putLong(bracelet, timestamp).commit();
+        sp.edit().putLong("noti_bracelet_"+bracelet, timestamp).commit();
     }
 
 
@@ -322,7 +322,7 @@ public class CacheUtil {
         }
         SharedPreferences sp = context.getSharedPreferences(
                 PARKING_CACHE, Context.MODE_PRIVATE);
-        return sp.getLong(bracelet,0);
+        return sp.getLong("noti_bracelet_"+bracelet,0);
     }
 
 

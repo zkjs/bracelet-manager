@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.amap.api.maps2d.model.Text;
 import com.zkjinshi.braceletmanager.R;
 import com.zkjinshi.braceletmanager.models.BraceletVo;
 import com.zkjinshi.braceletmanager.models.PatientVo;
@@ -68,6 +69,11 @@ public class PatientListAdapter extends RecyclerView.Adapter<PatientListAdapter.
         holder.tvBracelet.setText(vo.getBracelet());
         holder.tvRemark.setText(vo.getPatientRemark() != null ? vo.getPatientRemark() : "");
         holder.tvRoom.setText(vo.getPatientRoom() != null ? vo.getPatientRoom()+"房" : "");
+        if (vo.getAttached()==1) {
+            holder.tvAttached.setVisibility(View.GONE);
+        } else {
+            holder.tvAttached.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -86,6 +92,8 @@ public class PatientListAdapter extends RecyclerView.Adapter<PatientListAdapter.
         TextView tvRemark;
         @BindView(R.id.tv_room)
         TextView tvRoom;
+        @BindView(R.id.tv_attached)
+        TextView tvAttached;
 
         public ViewHolder(View itemView) {
             super(itemView);

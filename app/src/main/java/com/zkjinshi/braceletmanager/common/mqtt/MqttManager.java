@@ -96,11 +96,11 @@ public class MqttManager {
                 SOSMessage sosMessage = new Gson().fromJson(msg, SOSMessage.class);
 
                 if(null != sosMessage) {
-                    //if (new Date().getTime() - CacheUtil.getInstance().getBraceletTime(sosMessage.getBracelet()) > 5000) {
-                    NotificationHelper.getInstance().showNotification(context, sosMessage);
-                    EventBus.getDefault().post(sosMessage);
-                    CacheUtil.getInstance().setBraceletTime(sosMessage.getBracelet(), new Date().getTime());
-                    //}
+                    if (new Date().getTime() - CacheUtil.getInstance().getBraceletTime(sosMessage.getBracelet()) > 5000) {
+                        NotificationHelper.getInstance().showNotification(context, sosMessage);
+                        EventBus.getDefault().post(sosMessage);
+                        CacheUtil.getInstance().setBraceletTime(sosMessage.getBracelet(), new Date().getTime());
+                    }
                 }
             }
 
