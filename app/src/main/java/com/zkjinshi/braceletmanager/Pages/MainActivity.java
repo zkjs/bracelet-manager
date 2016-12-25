@@ -173,7 +173,12 @@ public class MainActivity extends BaseActivity
             mFragment = new AboutFragment();
             fab.hide();
             getSupportActionBar().setTitle(R.string.about);
+        } else if (id == R.id.nav_ap) {
+            mFragment = new APListFragment();
+            fab.hide();
+            getSupportActionBar().setTitle(R.string.nav_ap);
         }
+
         getFragmentManager().beginTransaction()
                 .replace(R.id.fragmentContainer, mFragment)
                 .commit();

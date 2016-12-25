@@ -57,7 +57,7 @@ public class OkHttpHelper {
         doRequest(request, callback);
     }
 
-    public void put(String url, Map<String,String> params, HttpBaseCallback callback) {
+    public void put(String url, Map<String,?> params, HttpBaseCallback callback) {
         if (CacheUtil.getInstance().getLocalApiServer() == null) return;
         Request request = buildRequest(url,params,HttpMethodType.PUT);
         doRequest(request, callback);
@@ -171,7 +171,7 @@ public class OkHttpHelper {
         });
     }
 
-    private Request buildRequest(String url, Map<String, String> params, HttpMethodType type) {
+    private Request buildRequest(String url, Map<String, ?> params, HttpMethodType type) {
         Request.Builder builder = new Request.Builder();
         builder.url(url);
 
@@ -191,7 +191,7 @@ public class OkHttpHelper {
         return builder.build();
     }
 
-    private RequestBody buildFormData(Map<String,String> params) {
+    private RequestBody buildFormData(Map<String,?> params) {
         JSONObject parameter = new JSONObject(params);
         RequestBody body = RequestBody.create(JSON, parameter.toString());
         return body;

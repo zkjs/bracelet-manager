@@ -94,6 +94,11 @@
             android:label="查看照片"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".Pages.APTriggerConfigActivity"
+            android:label="AP触发点配置"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"/>
 
         <!-- 云巴配置 -->
         <!-- <meta-data android:name="YUNBA_APPKEY" android:value="581aff4bbf76bbd65330b1d3" /> -->

@@ -90,4 +90,20 @@ public class EndpointHelper {
         return  ConfigUtil.getInstance().getApiDomain()+"bracelet/photos/" + bracelet;
     }
 
+    /**
+     * ap列表
+     * @return
+     */
+    public static String apList(){
+        return  ConfigUtil.getInstance().getApiDomain()+"ap/";
+    }
+
+    /**
+     * 修改ap Trigger
+     * @return
+     */
+    public static String modifyAPTrigger(){
+        return  ConfigUtil.getInstance().getApiDomain()+"ap/";
+    }
+
 }

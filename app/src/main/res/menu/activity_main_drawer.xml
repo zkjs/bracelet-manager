@@ -11,6 +11,10 @@
             android:icon="@drawable/ic_menu_gallery"
             android:title="空余手环"/>
         <item
+            android:id="@+id/nav_ap"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="AP管理"/>
+        <item
             android:id="@+id/nav_setting"
             android:icon="@drawable/ic_menu_manage"
             android:title="设置"/>
