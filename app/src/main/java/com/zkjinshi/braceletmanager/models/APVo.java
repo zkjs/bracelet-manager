@@ -17,6 +17,7 @@ public class APVo implements Serializable {
     private String triggerLogic;
     private List<String> triggers;
     private String update;
+    private int working;
 
     public String getApid() {
         return apid;
@@ -80,5 +81,13 @@ public class APVo implements Serializable {
 
     public void setUpdate(String update) {
         this.update = update;
+    }
+
+    public int getWorking() {
+        return working;
+    }
+
+    public void setWorking(int working) {
+        this.working = working;
     }
 }

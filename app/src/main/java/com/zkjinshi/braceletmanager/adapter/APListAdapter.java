@@ -1,5 +1,6 @@
 package com.zkjinshi.braceletmanager.adapter;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,8 +26,12 @@ public class APListAdapter extends RecyclerView.Adapter<APListAdapter.ViewHolder
     private List<APVo> mData;
     private LayoutInflater inflater;
     private APListAdapter.OnItemClickListener listener;
+    private Context context;
 
-    public APListAdapter(List<APVo> data) { this.mData = data; }
+    public APListAdapter(List<APVo> data, Context context) {
+        this.mData = data;
+        this.context = context;
+    }
 
     public void setOnItemClickListener(APListAdapter.OnItemClickListener listener) {
         this.listener = listener;
@@ -75,6 +80,13 @@ public class APListAdapter extends RecyclerView.Adapter<APListAdapter.ViewHolder
             holder.tvTrigger.setText(sb.toString());
         } else {
             holder.tvTrigger.setText("无拍照触发AP");
+        }
+        if (ap.getWorking() == 1) {
+            holder.tvName.setTextColor(context.getResources().getColor(R.color.ap_status_on));
+        } else if (ap.getWorking() == -1) {
+            holder.tvName.setTextColor(context.getResources().getColor(R.color.ap_status_off));
+        } else {
+            holder.tvName.setTextColor(context.getResources().getColor(R.color.ap_status_unknown));
         }
     }
 

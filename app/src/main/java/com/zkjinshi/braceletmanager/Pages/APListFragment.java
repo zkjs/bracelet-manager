@@ -11,8 +11,6 @@ import android.view.ViewGroup;
 
 import com.cjj.MaterialRefreshLayout;
 import com.cjj.MaterialRefreshListener;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.zkjinshi.braceletmanager.R;
 import com.zkjinshi.braceletmanager.adapter.APListAdapter;
 import com.zkjinshi.braceletmanager.common.http.EndpointHelper;
@@ -82,7 +80,7 @@ public class APListFragment extends Fragment {
     }
 
     private void initView() {
-        mAdapter = new APListAdapter(new ArrayList<APVo>());
+        mAdapter = new APListAdapter(new ArrayList<APVo>(), this.getActivity());
         mRecyclerview.setAdapter(mAdapter);
         mRecyclerview.setLayoutManager(new LinearLayoutManager(this.getActivity()));
         mRecyclerview.addItemDecoration(new DividerItemDecoration(this.getActivity(), DividerItemDecoration.VERTICAL_LIST));

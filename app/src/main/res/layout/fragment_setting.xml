@@ -30,5 +30,12 @@
         android:layout_height="wrap_content"
         android:id="@+id/btn_password"/>
 
+    <Button
+        android:text="Mqtt Pub  >>"
+        android:layout_marginTop="15dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/btn_mqtt_testing"/>
+
 
 </LinearLayout>

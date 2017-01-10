@@ -40,7 +40,7 @@ public class SettingFragment extends Fragment {
     }
 
 
-    @OnClick({R.id.btn_server, R.id.btn_password})
+    @OnClick({R.id.btn_server, R.id.btn_password, R.id.btn_mqtt_testing})
     public void onClick(View view) {
         Intent intent;
         switch (view.getId()) {
@@ -50,6 +50,10 @@ public class SettingFragment extends Fragment {
                 break;
             case R.id.btn_password:
                 intent = new Intent(this.getActivity(), SettingPasswordActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.btn_mqtt_testing:
+                intent = new Intent(this.getActivity(), MqttPubActivity.class);
                 startActivity(intent);
                 break;
         }
